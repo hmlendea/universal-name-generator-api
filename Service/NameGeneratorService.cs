@@ -13,6 +13,7 @@ using UniversalNameGenerator.API.Configuration;
 using UniversalNameGenerator.API.DataAccess.DataObjects;
 using UniversalNameGenerator.API.DataAccess.Repositories;
 using UniversalNameGenerator.API.Service.Mapping;
+using UniversalNameGenerator.API.Service.NameGenerators.RandomSelector;
 using UniversalNameGenerator.API.Service.NameGenerators.Randomiser;
 
 namespace UniversalNameGenerator.API.Service
@@ -80,6 +81,10 @@ namespace UniversalNameGenerator.API.Service
                             values = GenerateRandomiserNames(schema, amount, split, filters);
                             break;
 
+                        case "random-selector":
+                            values = GenerateRandomSelectorNames(schema, amount, split, filters);
+                            break;
+
                         case "markov":
                             values = GenerateMarkovNames(schema, amount, split, filters);
                             break;
@@ -141,6 +146,27 @@ namespace UniversalNameGenerator.API.Service
             if (!generators.TryGetValue(schema, out INameGenerator generator))
             {
                 generator = new RandomiserNameGenerator(split[1], wordlists)
+                {
+                    MinNameLength = minLength,
+                    MaxNameLength = maxLength,
+                    ExcludedStrings = filters
+                };
+                generators.Add(schema, generator);
+            }
+
+            return generator.Generate(amount);
+        }
+
+        IEnumerable<string> GenerateRandomSelectorNames(string schema, int amount, string[] split, List<string> filters)
+        {
+            int minLength = int.Parse(split[1]);
+            int maxLength = int.Parse(split[2]);
+            List<string> wordlistKeys = split[3].Split('|').ToList();
+            List<Wordlist> wordlists = GetWordLists(wordlistKeys);
+
+            if (!generators.TryGetValue(schema, out INameGenerator generator))
+            {
+                generator = new RandomSelectorNameGenerator(wordlists)
                 {
                     MinNameLength = minLength,
                     MaxNameLength = maxLength,
