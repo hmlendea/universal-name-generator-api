@@ -1,4 +1,5 @@
 using System;
+using System.Xml.Serialization;
 
 using NuciDAL.DataObjects;
 using NuciExtensions;
