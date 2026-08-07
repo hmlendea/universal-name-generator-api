@@ -5,9 +5,9 @@ using NuciAPI.Responses;
 
 namespace UniversalNameGenerator.API.Models
 {
-    public class GetNamesResponse : NuciApiSuccessResponse
+    public sealed class GetNamesResponse : NuciApiSuccessResponse
     {
         [JsonPropertyName("names")]
-        public IEnumerable<string> Names { get; set; }
+        public IEnumerable<string> Names { get; set; } = [];
     }
 }

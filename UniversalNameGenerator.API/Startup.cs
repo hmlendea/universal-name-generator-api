@@ -3,15 +3,27 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using NuciAPI.Middleware.ExceptionHandling;
 using NuciAPI.Middleware.Logging;
 using NuciAPI.Middleware.Security;
+
 using UniversalNameGenerator.API.Configuration;
 
 namespace UniversalNameGenerator.API
 {
-    public class Startup(IConfiguration configuration)
+    public sealed class Startup(IConfiguration configuration) : IStartup
     {
+        private static string[] AllowedCorsOrigins =>
+        [
+            "http://localhost:5000",
+            "https://localhost:5001",
+            "http://localhost:7000",
+            "https://localhost:7001",
+            "http://localhost:8080",
+            "http://localhost:8081"
+        ];
+
         public IConfiguration Configuration => configuration;
 
         public void ConfigureServices(IServiceCollection services)
@@ -22,13 +34,7 @@ namespace UniversalNameGenerator.API
             {
                 options.AddDefaultPolicy(policy =>
                     policy
-                        .WithOrigins(
-                            "http://localhost:5000",
-                            "https://localhost:5001",
-                            "http://localhost:7000",
-                            "https://localhost:7001",
-                            "http://localhost:8080",
-                            "http://localhost:8081")
+                        .WithOrigins(AllowedCorsOrigins)
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });
@@ -39,25 +45,25 @@ namespace UniversalNameGenerator.API
                 .AddCustomServices();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder applicationBuilder, IWebHostEnvironment hostingEnvironment)
         {
-            app.UseNuciApiExceptionHandling();
-            app.UseNuciApiScannerProtection();
-            app.UseNuciApiRequestLogging();
+            applicationBuilder.UseNuciApiExceptionHandling();
+            applicationBuilder.UseNuciApiScannerProtection();
+            applicationBuilder.UseNuciApiRequestLogging();
 
-            if (env.IsDevelopment())
+            if (hostingEnvironment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                applicationBuilder.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-            app.UseCors();
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-            app.UseRouting();
-            app.UseAuthorization();
+            applicationBuilder.UseHttpsRedirection();
+            applicationBuilder.UseCors();
+            applicationBuilder.UseDefaultFiles();
+            applicationBuilder.UseStaticFiles();
+            applicationBuilder.UseRouting();
+            applicationBuilder.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            applicationBuilder.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });

@@ -7,14 +7,14 @@ using NuciGenerators.Text.Models;
 
 namespace UniversalNameGenerator.API.Service.NameGenerators.Randomiser
 {
-    public class RandomiserNameGenerator : NameGenerator
+    public sealed class RandomiserNameGenerator : NameGenerator
     {
-        readonly string separator;
+        private readonly string separator;
 
-        public RandomiserNameGenerator(string separator, List<Wordlist> wordlists)
-            : base(wordlists)
+        public RandomiserNameGenerator(string separator, IEnumerable<Wordlist> wordlists)
+            : base([.. wordlists])
         {
-            Wordlists = wordlists;
+            Wordlists = [.. wordlists];
             OnlyNewNames = false;
 
             this.separator = separator;
@@ -24,7 +24,7 @@ namespace UniversalNameGenerator.API.Service.NameGenerators.Randomiser
         {
             List<string> parts = [];
 
-            Wordlists.ForEach(wl => parts.Add(wl.GetRandomElement().Values.GetRandomElement()));
+            Wordlists.ForEach(wordlist => parts.Add(wordlist.GetRandomElement().Values.GetRandomElement()));
 
             return string.Join(separator, parts);
         }

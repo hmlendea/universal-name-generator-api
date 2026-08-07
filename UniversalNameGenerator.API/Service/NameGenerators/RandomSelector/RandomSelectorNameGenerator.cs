@@ -7,12 +7,12 @@ using NuciGenerators.Text.Models;
 
 namespace UniversalNameGenerator.API.Service.NameGenerators.RandomSelector
 {
-    public class RandomSelectorNameGenerator : NameGenerator
+    public sealed class RandomSelectorNameGenerator : NameGenerator
     {
-        public RandomSelectorNameGenerator(List<Wordlist> wordlists)
-            : base(wordlists)
+        public RandomSelectorNameGenerator(IEnumerable<Wordlist> wordlists)
+            : base([.. wordlists])
         {
-            Wordlists = wordlists;
+            Wordlists = [.. wordlists];
             OnlyNewNames = false;
         }
 
@@ -20,9 +20,9 @@ namespace UniversalNameGenerator.API.Service.NameGenerators.RandomSelector
         {
             List<string> combinedWords = [];
 
-            Wordlists.ForEach(wl =>
+            Wordlists.ForEach(wordlist =>
             {
-                combinedWords.AddRange(wl.GetRandomElement().Values);
+                combinedWords.AddRange(wordlist.GetRandomElement().Values);
             });
 
             return combinedWords.GetRandomElement();
