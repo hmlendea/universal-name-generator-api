@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 
 using NuciDAL.Repositories;
+
 using NuciExtensions;
+
 using NuciGenerators.Text;
 using NuciGenerators.Text.MarkovChain;
 using NuciGenerators.Text.Models;
@@ -41,6 +43,34 @@ namespace UniversalNameGenerator.API.Service
         private static int MarkovChainOrder => 4;
 
         private static float MarkovChainTemperature => 0.0f;
+
+        private static int CommandNameIndex => 0;
+
+        private static int RandomCommandChoicesIndex => 1;
+
+        private static int RandomCommandMinimumLengthIndex => 2;
+
+        private static int RandomCommandMaximumLengthIndex => 3;
+
+        private static int RandomiserCommandSeparatorIndex => 1;
+
+        private static int RandomiserCommandMinimumLengthIndex => 2;
+
+        private static int RandomiserCommandMaximumLengthIndex => 3;
+
+        private static int RandomiserCommandWordlistKeysIndex => 4;
+
+        private static int RandomSelectorCommandMinimumLengthIndex => 1;
+
+        private static int RandomSelectorCommandMaximumLengthIndex => 2;
+
+        private static int RandomSelectorCommandWordlistKeysIndex => 3;
+
+        private static int MarkovCommandMinimumLengthIndex => 1;
+
+        private static int MarkovCommandMaximumLengthIndex => 2;
+
+        private static int MarkovCommandWordlistKeysIndex => 3;
 
         private readonly Dictionary<string, INameGenerator> generatorsBySchemaId = [];
 
@@ -80,38 +110,38 @@ namespace UniversalNameGenerator.API.Service
         private IEnumerable<string> GenerateNames(
             string schema,
             int amount,
-            string filterlist,
-            WordCase casing)
+            string filterlistPath,
+            WordCase wordCase)
         {
             Random randomGenerator = new();
-            List<string> filterValues = GetFilterValues(filterlist);
-            List<List<string>> generatedNameParts = GetGeneratedNameParts(
+            IEnumerable<string> filterValues = GetFilterValues(filterlistPath);
+            IEnumerable<IEnumerable<string>> generatedNameParts = GetGeneratedNameParts(
                 schema,
                 amount,
                 filterValues,
                 randomGenerator);
 
-            return ComposeNames(generatedNameParts, casing);
+            return ComposeNames(generatedNameParts, wordCase);
         }
 
-        private List<string> GetFilterValues(string filterlist)
+        private IEnumerable<string> GetFilterValues(string filterlistPath)
         {
-            if (string.IsNullOrWhiteSpace(filterlist))
+            if (string.IsNullOrWhiteSpace(filterlistPath))
             {
                 return [];
             }
 
             string filterlistFilePath = Path.Combine(
                 wordListsRootDirectory,
-                filterlist + WordlistFileExtension);
+                filterlistPath + WordlistFileExtension);
 
             return [.. File.ReadAllLines(filterlistFilePath)];
         }
 
-        private List<List<string>> GetGeneratedNameParts(
+        private IEnumerable<IEnumerable<string>> GetGeneratedNameParts(
             string schema,
             int amount,
-            List<string> filters,
+            IEnumerable<string> filters,
             Random randomGenerator)
         {
             List<List<string>> generatedValues = [];
@@ -139,7 +169,7 @@ namespace UniversalNameGenerator.API.Service
                 generatedValues.Add([.. values]);
                 currentGeneration = currentGeneration.Remove(
                     generatorStartIndex,
-                    (generatorEndIndex - generatorStartIndex) + 1);
+                    generatorEndIndex - generatorStartIndex + 1);
             }
 
             return generatedValues;
@@ -149,7 +179,7 @@ namespace UniversalNameGenerator.API.Service
             string schema,
             int amount,
             string command,
-            List<string> filters,
+            IEnumerable<string> filters,
             Random randomGenerator)
         {
             string[] commandValues = command.Split(CommandValueSeparatorCharacter);
@@ -159,7 +189,7 @@ namespace UniversalNameGenerator.API.Service
                 return [];
             }
 
-            string commandName = commandValues[0];
+            string commandName = commandValues[CommandNameIndex];
 
             if (string.Equals(commandName, RandomCommandName, StringComparison.Ordinal))
             {
@@ -195,9 +225,15 @@ namespace UniversalNameGenerator.API.Service
                 throw new FormatException($"Command '{command}' does not include sufficient values.");
             }
 
-            List<string> choices = [.. commandValues[1].Split(WordlistSeparatorCharacter)];
-            int minimumLength = ParseInteger(commandValues[2], nameof(minimumLength), command);
-            int maximumLength = ParseInteger(commandValues[3], nameof(maximumLength), command);
+            List<string> choices = [.. commandValues[RandomCommandChoicesIndex].Split(WordlistSeparatorCharacter)];
+            int minimumLength = ParseInteger(
+                commandValues[RandomCommandMinimumLengthIndex],
+                nameof(minimumLength),
+                command);
+            int maximumLength = ParseInteger(
+                commandValues[RandomCommandMaximumLengthIndex],
+                nameof(maximumLength),
+                command);
 
             if (minimumLength > maximumLength)
             {
@@ -230,10 +266,15 @@ namespace UniversalNameGenerator.API.Service
         }
 
         private static IEnumerable<string> ComposeNames(
-            IEnumerable<List<string>> generatedParts,
-            WordCase casing)
+            IEnumerable<IEnumerable<string>> generatedParts,
+            WordCase wordCase)
         {
-            List<List<string>> generatedPartsList = [.. generatedParts];
+            List<List<string>> generatedPartsList = [];
+
+            foreach (IEnumerable<string> generatedPart in generatedParts)
+            {
+                generatedPartsList.Add([.. generatedPart]);
+            }
 
             if (generatedPartsList.Count == 0)
             {
@@ -248,31 +289,31 @@ namespace UniversalNameGenerator.API.Service
                 string name = string.Empty;
 
                 generatedPartsList.ForEach(part => name += part[generatedNameIndex]);
-                name = GetNameWithCasing(name, casing);
+                name = GetNameWithCasing(name, wordCase);
                 names.Add(name);
             }
 
             return names;
         }
 
-        private static string GetNameWithCasing(string name, WordCase casing)
+        private static string GetNameWithCasing(string name, WordCase wordCase)
         {
-            if (object.Equals(casing, WordCase.Lower))
+            if (Equals(wordCase, WordCase.Lower))
             {
                 return name.ToLower();
             }
 
-            if (object.Equals(casing, WordCase.Upper))
+            if (Equals(wordCase, WordCase.Upper))
             {
                 return name.ToUpper();
             }
 
-            if (object.Equals(casing, WordCase.Title))
+            if (Equals(wordCase, WordCase.Title))
             {
                 return name.ToTitleCase();
             }
 
-            if (object.Equals(casing, WordCase.Sentence))
+            if (Equals(wordCase, WordCase.Sentence))
             {
                 return name.ToSentenceCase();
             }
@@ -284,25 +325,32 @@ namespace UniversalNameGenerator.API.Service
             string schema,
             int amount,
             string[] commandValues,
-            List<string> filters)
+            IEnumerable<string> filters)
         {
             if (commandValues.Length < 5)
             {
                 throw new FormatException("Randomiser command does not include sufficient values.");
             }
 
-            int minimumLength = ParseInteger(commandValues[2], nameof(minimumLength), commandValues[0]);
-            int maximumLength = ParseInteger(commandValues[3], nameof(maximumLength), commandValues[0]);
-            List<string> wordlistKeys = [.. commandValues[4].Split(WordlistSeparatorCharacter)];
+            int minimumLength = ParseInteger(
+                commandValues[RandomiserCommandMinimumLengthIndex],
+                nameof(minimumLength),
+                commandValues[CommandNameIndex]);
+            int maximumLength = ParseInteger(
+                commandValues[RandomiserCommandMaximumLengthIndex],
+                nameof(maximumLength),
+                commandValues[CommandNameIndex]);
+            List<string> wordlistKeys = [.. commandValues[RandomiserCommandWordlistKeysIndex].Split(WordlistSeparatorCharacter)];
             List<Wordlist> wordlists = [.. GetWordLists(wordlistKeys)];
+            List<string> excludedStrings = [.. filters];
 
             if (!generatorsBySchemaId.TryGetValue(schema, out INameGenerator generator))
             {
-                generator = new RandomiserNameGenerator(commandValues[1], wordlists)
+                generator = new RandomiserNameGenerator(commandValues[RandomiserCommandSeparatorIndex], wordlists)
                 {
                     MinNameLength = minimumLength,
                     MaxNameLength = maximumLength,
-                    ExcludedStrings = filters
+                    ExcludedStrings = excludedStrings
                 };
                 generatorsBySchemaId.Add(schema, generator);
             }
@@ -314,17 +362,24 @@ namespace UniversalNameGenerator.API.Service
             string schema,
             int amount,
             string[] commandValues,
-            List<string> filters)
+            IEnumerable<string> filters)
         {
             if (commandValues.Length < 4)
             {
                 throw new FormatException("Random selector command does not include sufficient values.");
             }
 
-            int minimumLength = ParseInteger(commandValues[1], nameof(minimumLength), commandValues[0]);
-            int maximumLength = ParseInteger(commandValues[2], nameof(maximumLength), commandValues[0]);
-            List<string> wordlistKeys = [.. commandValues[3].Split(WordlistSeparatorCharacter)];
+            int minimumLength = ParseInteger(
+                commandValues[RandomSelectorCommandMinimumLengthIndex],
+                nameof(minimumLength),
+                commandValues[CommandNameIndex]);
+            int maximumLength = ParseInteger(
+                commandValues[RandomSelectorCommandMaximumLengthIndex],
+                nameof(maximumLength),
+                commandValues[CommandNameIndex]);
+            List<string> wordlistKeys = [.. commandValues[RandomSelectorCommandWordlistKeysIndex].Split(WordlistSeparatorCharacter)];
             List<Wordlist> wordlists = [.. GetWordLists(wordlistKeys)];
+            List<string> excludedStrings = [.. filters];
 
             if (!generatorsBySchemaId.TryGetValue(schema, out INameGenerator generator))
             {
@@ -332,7 +387,7 @@ namespace UniversalNameGenerator.API.Service
                 {
                     MinNameLength = minimumLength,
                     MaxNameLength = maximumLength,
-                    ExcludedStrings = filters
+                    ExcludedStrings = excludedStrings
                 };
                 generatorsBySchemaId.Add(schema, generator);
             }
@@ -344,17 +399,24 @@ namespace UniversalNameGenerator.API.Service
             string schema,
             int amount,
             string[] commandValues,
-            List<string> filters)
+            IEnumerable<string> filters)
         {
             if (commandValues.Length < 4)
             {
                 throw new FormatException("Markov command does not include sufficient values.");
             }
 
-            int minimumLength = ParseInteger(commandValues[1], nameof(minimumLength), commandValues[0]);
-            int maximumLength = ParseInteger(commandValues[2], nameof(maximumLength), commandValues[0]);
-            List<string> wordlistKeys = [.. commandValues[3].Split(WordlistSeparatorCharacter)];
+            int minimumLength = ParseInteger(
+                commandValues[MarkovCommandMinimumLengthIndex],
+                nameof(minimumLength),
+                commandValues[CommandNameIndex]);
+            int maximumLength = ParseInteger(
+                commandValues[MarkovCommandMaximumLengthIndex],
+                nameof(maximumLength),
+                commandValues[CommandNameIndex]);
+            List<string> wordlistKeys = [.. commandValues[MarkovCommandWordlistKeysIndex].Split(WordlistSeparatorCharacter)];
             List<Wordlist> wordlists = [.. GetWordLists(wordlistKeys)];
+            List<string> excludedStrings = [.. filters];
 
             if (!generatorsBySchemaId.TryGetValue(schema, out INameGenerator generator))
             {
@@ -362,7 +424,7 @@ namespace UniversalNameGenerator.API.Service
                 {
                     MinNameLength = minimumLength,
                     MaxNameLength = maximumLength,
-                    ExcludedStrings = filters
+                    ExcludedStrings = excludedStrings
                 };
                 generatorsBySchemaId.Add(schema, generator);
             }

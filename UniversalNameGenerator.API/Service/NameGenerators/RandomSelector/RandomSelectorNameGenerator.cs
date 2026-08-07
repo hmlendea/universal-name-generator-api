@@ -9,10 +9,10 @@ namespace UniversalNameGenerator.API.Service.NameGenerators.RandomSelector
 {
     public sealed class RandomSelectorNameGenerator : NameGenerator
     {
-        public RandomSelectorNameGenerator(List<Wordlist> wordlists)
-            : base(wordlists)
+        public RandomSelectorNameGenerator(IEnumerable<Wordlist> wordlists)
+            : base([.. wordlists])
         {
-            Wordlists = wordlists;
+            Wordlists = [.. wordlists];
             OnlyNewNames = false;
         }
 

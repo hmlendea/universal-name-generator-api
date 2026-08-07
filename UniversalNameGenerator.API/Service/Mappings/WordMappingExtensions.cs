@@ -15,7 +15,7 @@ namespace UniversalNameGenerator.API.Service.Mappings
             Values = wordDataObject.Values
         };
 
-        internal static IEnumerable<Word> ToServiceModels(this IEnumerable<WordDataObject> entities)
-            => entities.Select(entity => entity.ToServiceModel());
+        internal static IEnumerable<Word> ToServiceModels(this IEnumerable<WordDataObject> wordDataObjects)
+            => wordDataObjects.Select(wordDataObject => wordDataObject.ToServiceModel());
     }
 }

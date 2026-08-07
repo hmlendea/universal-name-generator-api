@@ -11,10 +11,10 @@ namespace UniversalNameGenerator.API.Service.NameGenerators.Randomiser
     {
         private readonly string separator;
 
-        public RandomiserNameGenerator(string separator, List<Wordlist> wordlists)
-            : base(wordlists)
+        public RandomiserNameGenerator(string separator, IEnumerable<Wordlist> wordlists)
+            : base([.. wordlists])
         {
-            Wordlists = wordlists;
+            Wordlists = [.. wordlists];
             OnlyNewNames = false;
 
             this.separator = separator;

@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using NuciAPI.Middleware.ExceptionHandling;
 using NuciAPI.Middleware.Logging;
 using NuciAPI.Middleware.Security;
+
 using UniversalNameGenerator.API.Configuration;
 
 namespace UniversalNameGenerator.API
@@ -43,25 +45,25 @@ namespace UniversalNameGenerator.API
                 .AddCustomServices();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment hostingEnvironment)
+        public void Configure(IApplicationBuilder applicationBuilder, IWebHostEnvironment hostingEnvironment)
         {
-            app.UseNuciApiExceptionHandling();
-            app.UseNuciApiScannerProtection();
-            app.UseNuciApiRequestLogging();
+            applicationBuilder.UseNuciApiExceptionHandling();
+            applicationBuilder.UseNuciApiScannerProtection();
+            applicationBuilder.UseNuciApiRequestLogging();
 
             if (hostingEnvironment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                applicationBuilder.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-            app.UseCors();
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-            app.UseRouting();
-            app.UseAuthorization();
+            applicationBuilder.UseHttpsRedirection();
+            applicationBuilder.UseCors();
+            applicationBuilder.UseDefaultFiles();
+            applicationBuilder.UseStaticFiles();
+            applicationBuilder.UseRouting();
+            applicationBuilder.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            applicationBuilder.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });

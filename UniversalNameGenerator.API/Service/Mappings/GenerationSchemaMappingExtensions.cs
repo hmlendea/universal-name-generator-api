@@ -20,7 +20,7 @@ namespace UniversalNameGenerator.API.Service.Mappings
             WordCase = Enum.Parse<WordCase>(generationSchemaDataObject.WordCase),
         };
 
-        internal static IEnumerable<GenerationSchema> ToServiceModels(this IEnumerable<GenerationSchemaDataObject> entities)
-            => entities.Select(entity => entity.ToServiceModel());
+        internal static IEnumerable<GenerationSchema> ToServiceModels(this IEnumerable<GenerationSchemaDataObject> generationSchemaDataObjects)
+            => generationSchemaDataObjects.Select(generationSchemaDataObject => generationSchemaDataObject.ToServiceModel());
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using NuciLog;
 using NuciLog.Core;
+
 using UniversalNameGenerator.API.Configuration;
 using UniversalNameGenerator.API.Service;
 

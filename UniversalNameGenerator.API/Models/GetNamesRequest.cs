@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+
 using NuciAPI.Requests;
+
 using NuciSecurity.HMAC;
 
 namespace UniversalNameGenerator.API.Models

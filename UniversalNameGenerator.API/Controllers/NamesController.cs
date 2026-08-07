@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+
 using NuciAPI.Controllers;
-using UniversalNameGenerator.API.Models;
+
 using UniversalNameGenerator.API.Configuration;
+using UniversalNameGenerator.API.Models;
 using UniversalNameGenerator.API.Service;
 
 namespace UniversalNameGenerator.API.Controllers
@@ -9,7 +11,7 @@ namespace UniversalNameGenerator.API.Controllers
     [Route("[controller]")]
     [ApiController]
     public sealed class NamesController(
-        INameGeneratorService service,
+        INameGeneratorService nameGeneratorService,
         SecuritySettings securitySettings) : NuciApiController, INamesController
     {
         private readonly NuciApiAuthorisation authorisation = NuciApiAuthorisation.ApiKey(securitySettings.ApiKey);
@@ -18,7 +20,7 @@ namespace UniversalNameGenerator.API.Controllers
         public ActionResult GetNames([FromQuery] GetNamesRequest request)
             => ProcessRequest(
                 request,
-                () => new GetNamesResponse { Names = service.GetNames(request.Schema, request.Count) },
+                () => new GetNamesResponse { Names = nameGeneratorService.GetNames(request.Schema, request.Count) },
                 authorisation);
     }
 }

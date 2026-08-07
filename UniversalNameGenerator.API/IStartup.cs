@@ -8,6 +8,6 @@ namespace UniversalNameGenerator.API
     {
         void ConfigureServices(IServiceCollection services);
 
-        void Configure(IApplicationBuilder app, IWebHostEnvironment hostingEnvironment);
+        void Configure(IApplicationBuilder applicationBuilder, IWebHostEnvironment hostingEnvironment);
     }
 }
