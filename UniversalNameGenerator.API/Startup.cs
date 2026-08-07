@@ -10,8 +10,18 @@ using UniversalNameGenerator.API.Configuration;
 
 namespace UniversalNameGenerator.API
 {
-    public class Startup(IConfiguration configuration)
+    public sealed class Startup(IConfiguration configuration) : IStartup
     {
+        private static string[] AllowedCorsOrigins =>
+        [
+            "http://localhost:5000",
+            "https://localhost:5001",
+            "http://localhost:7000",
+            "https://localhost:7001",
+            "http://localhost:8080",
+            "http://localhost:8081"
+        ];
+
         public IConfiguration Configuration => configuration;
 
         public void ConfigureServices(IServiceCollection services)
@@ -22,13 +32,7 @@ namespace UniversalNameGenerator.API
             {
                 options.AddDefaultPolicy(policy =>
                     policy
-                        .WithOrigins(
-                            "http://localhost:5000",
-                            "https://localhost:5001",
-                            "http://localhost:7000",
-                            "https://localhost:7001",
-                            "http://localhost:8080",
-                            "http://localhost:8081")
+                        .WithOrigins(AllowedCorsOrigins)
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });
@@ -39,13 +43,13 @@ namespace UniversalNameGenerator.API
                 .AddCustomServices();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment hostingEnvironment)
         {
             app.UseNuciApiExceptionHandling();
             app.UseNuciApiScannerProtection();
             app.UseNuciApiRequestLogging();
 
-            if (env.IsDevelopment())
+            if (hostingEnvironment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }

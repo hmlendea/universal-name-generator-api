@@ -8,11 +8,11 @@ namespace UniversalNameGenerator.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class NamesController(
+    public sealed class NamesController(
         INameGeneratorService service,
-        SecuritySettings securitySettings) : NuciApiController
+        SecuritySettings securitySettings) : NuciApiController, INamesController
     {
-        readonly NuciApiAuthorisation authorisation = NuciApiAuthorisation.ApiKey(securitySettings.ApiKey);
+        private readonly NuciApiAuthorisation authorisation = NuciApiAuthorisation.ApiKey(securitySettings.ApiKey);
 
         [HttpGet]
         public ActionResult GetNames([FromQuery] GetNamesRequest request)

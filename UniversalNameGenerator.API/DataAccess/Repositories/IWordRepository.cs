@@ -6,6 +6,6 @@ namespace UniversalNameGenerator.API.DataAccess.Repositories
 {
     public interface IWordRepository
     {
-        IEnumerable<WordEntity> GetAll();
+        IEnumerable<WordDataObject> GetAll();
     }
 }

@@ -6,69 +6,77 @@ using UniversalNameGenerator.API.DataAccess.DataObjects;
 
 namespace UniversalNameGenerator.API.DataAccess.Repositories
 {
-    public class WordRepository(string fileName) : IWordRepository
+    public sealed class WordRepository(string sourceFilePath) : IWordRepository
     {
-        readonly Dictionary<string, WordEntity> words = [];
-        readonly string fileName = fileName;
+        private static char ItemSeparatorCharacter => '_';
 
-        public IEnumerable<WordEntity> GetAll()
+        private static char CommentStartCharacter => '#';
+
+        private readonly Dictionary<string, WordDataObject> wordsByIdentifier = [];
+
+        private readonly string sourceFilePath = sourceFilePath;
+
+        public IEnumerable<WordDataObject> GetAll()
         {
             LoadContent();
-            return words.Values;
+
+            return wordsByIdentifier.Values;
         }
 
-        void LoadContent()
+        private void LoadContent()
         {
-            using StreamReader reader = File.OpenText(fileName);
-            string line;
+            wordsByIdentifier.Clear();
 
-            while ((line = reader.ReadLine()) is not null)
+            using StreamReader streamReader = File.OpenText(sourceFilePath);
+            string lineContent;
+
+            while ((lineContent = streamReader.ReadLine()) is not null)
             {
-                WordEntity word = GetWordFromLine(line);
+                WordDataObject wordDataObject = GetWordFromLine(lineContent);
 
-                if (words.TryGetValue(word.Id, out WordEntity value))
+                if (wordsByIdentifier.TryGetValue(wordDataObject.Id, out WordDataObject existingWordDataObject))
                 {
-                    value.Values.Add(word.Values.First());
+                    existingWordDataObject.Values.Add(wordDataObject.Values.First());
                 }
                 else
                 {
-                    words.Add(word.Id, word);
+                    wordsByIdentifier.Add(wordDataObject.Id, wordDataObject);
                 }
             }
         }
 
-        static WordEntity GetWordFromLine(string line)
+        private static WordDataObject GetWordFromLine(string lineContent)
         {
-            string processedLine = UncommentLine(line);
-            int separatorIndex = processedLine.IndexOf('_');
+            string uncommentedLineContent = UncommentLine(lineContent);
+            int separatorIndex = uncommentedLineContent.IndexOf(ItemSeparatorCharacter);
 
-            WordEntity word = new();
+            WordDataObject wordDataObject = new();
 
             if (separatorIndex > 0)
             {
-                word.Id = processedLine[(separatorIndex + 1)..];
-                word.Values = [processedLine[..separatorIndex]];
+                wordDataObject.Id = uncommentedLineContent[(separatorIndex + 1)..];
+                wordDataObject.Values = [uncommentedLineContent[..separatorIndex]];
             }
             else
             {
-                word.Id = processedLine;
-                word.Values = [processedLine];
+                wordDataObject.Id = uncommentedLineContent;
+                wordDataObject.Values = [uncommentedLineContent];
             }
 
-            return word;
+            return wordDataObject;
         }
 
-        static string UncommentLine(string line)
+        private static string UncommentLine(string lineContent)
         {
-            int commentIndex = line.IndexOf('#');
+            int commentIndex = lineContent.IndexOf(CommentStartCharacter);
 
             if (commentIndex > 0)
             {
-                line = line[..commentIndex];
-                line = line.TrimEnd();
+                lineContent = lineContent[..commentIndex];
+                lineContent = lineContent.TrimEnd();
             }
 
-            return line;
+            return lineContent;
         }
     }
 }

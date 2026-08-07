@@ -10,6 +10,10 @@ namespace UniversalNameGenerator.API
 {
     public static class ServiceCollectionExtensions
     {
+        private static string DataStoreSettingsSectionName => "DataStoreSettings";
+
+        private static string SecuritySettingsSectionName => "SecuritySettings";
+
         public static IServiceCollection AddConfigurations(
             this IServiceCollection services,
             IConfiguration configuration)
@@ -17,8 +21,8 @@ namespace UniversalNameGenerator.API
             DataStoreSettings dataStoreSettings = new();
             SecuritySettings securitySettings = new();
 
-            configuration.Bind(nameof(dataStoreSettings), dataStoreSettings);
-            configuration.Bind(nameof(securitySettings), securitySettings);
+            configuration.Bind(DataStoreSettingsSectionName, dataStoreSettings);
+            configuration.Bind(SecuritySettingsSectionName, securitySettings);
 
             return services
                 .AddSingleton(dataStoreSettings)
@@ -26,8 +30,9 @@ namespace UniversalNameGenerator.API
                 .AddNuciLoggerSettings(configuration);
         }
 
-        public static IServiceCollection AddCustomServices(this IServiceCollection services) => services
-            .AddScoped<INameGeneratorService, NameGeneratorService>()
-            .AddScoped<ILogger, NuciLogger>();
+        public static IServiceCollection AddCustomServices(this IServiceCollection services)
+            => services
+                .AddScoped<INameGeneratorService, NameGeneratorService>()
+                .AddScoped<ILogger, NuciLogger>();
     }
 }

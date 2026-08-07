@@ -4,7 +4,7 @@ namespace UniversalNameGenerator.API.Logging
 {
     public sealed class MyLogInfoKey : LogInfoKey
     {
-        MyLogInfoKey(string name) : base(name) { }
+        private MyLogInfoKey(string name) : base(name) { }
 
         public static LogInfoKey Schema => new MyLogInfoKey(nameof(Schema));
 

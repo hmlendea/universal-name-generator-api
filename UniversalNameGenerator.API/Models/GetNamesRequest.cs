@@ -4,7 +4,7 @@ using NuciSecurity.HMAC;
 
 namespace UniversalNameGenerator.API.Models
 {
-    public class GetNamesRequest : NuciApiRequest
+    public sealed class GetNamesRequest : NuciApiRequest
     {
         [HmacOrder(1)]
         public string Schema { get; set; }
