@@ -197,57 +197,57 @@ namespace UniversalNameGenerator.API.UnitTests.Service
 
             string xmlContent =
                 $@"<?xml version=""1.0"" encoding=""utf-8""?>
-<ArrayOfGenerationSchemaEntity xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-    <GenerationSchemaEntity>
+<ArrayOfGenerationSchemaDataObject xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+    <GenerationSchemaDataObject>
         <Id>{FantasyDragonsSchemaId}</Id>
         <Name>Fantasy dragons</Name>
         <Category>Astora</Category>
         <Schema>{{randomiser, ,4,32,fantasy/first|fantasy/last}}</Schema>
         <WordCase>{titleWordCase}</WordCase>
-    </GenerationSchemaEntity>
-    <GenerationSchemaEntity>
+    </GenerationSchemaDataObject>
+    <GenerationSchemaDataObject>
         <Id>{AstoraSettlementsSchemaId}</Id>
         <Name>Astora settlements</Name>
         <Category>Romania</Category>
         <Schema>{{random,so|la,4,4}}</Schema>
         <WordCase>{lowerWordCase}</WordCase>
-    </GenerationSchemaEntity>
-    <GenerationSchemaEntity>
+    </GenerationSchemaDataObject>
+    <GenerationSchemaDataObject>
         <Id>{CitySelectionSchemaId}</Id>
         <Name>City selection</Name>
         <Category>Nucilandia</Category>
         <Schema>{{random-selector,4,24,locations/cities}}</Schema>
         <WordCase>{titleWordCase}</WordCase>
-    </GenerationSchemaEntity>
-    <GenerationSchemaEntity>
+    </GenerationSchemaDataObject>
+    <GenerationSchemaDataObject>
         <Id>{UnsupportedSchemaId}</Id>
         <Name>Unsupported command</Name>
         <Category>Nucilandia</Category>
         <Schema>{{mystery,4,24,locations/cities}}</Schema>
         <WordCase>{titleWordCase}</WordCase>
-    </GenerationSchemaEntity>
-    <GenerationSchemaEntity>
+    </GenerationSchemaDataObject>
+    <GenerationSchemaDataObject>
         <Id>{InvalidIntegerSchemaId}</Id>
         <Name>Invalid integer</Name>
         <Category>Nucilandia</Category>
         <Schema>{{random,so|la,four,8}}</Schema>
         <WordCase>{titleWordCase}</WordCase>
-    </GenerationSchemaEntity>
-    <GenerationSchemaEntity>
+    </GenerationSchemaDataObject>
+    <GenerationSchemaDataObject>
         <Id>{InvalidRangeSchemaId}</Id>
         <Name>Invalid range</Name>
         <Category>Nucilandia</Category>
         <Schema>{{random,so|la,16,4}}</Schema>
         <WordCase>{titleWordCase}</WordCase>
-    </GenerationSchemaEntity>
-    <GenerationSchemaEntity>
+    </GenerationSchemaDataObject>
+    <GenerationSchemaDataObject>
         <Id>{InvalidRandomiserSchemaId}</Id>
         <Name>Invalid randomiser</Name>
         <Category>Nucilandia</Category>
         <Schema>{{randomiser, ,4}}</Schema>
         <WordCase>{titleWordCase}</WordCase>
-    </GenerationSchemaEntity>
-</ArrayOfGenerationSchemaEntity>
+    </GenerationSchemaDataObject>
+</ArrayOfGenerationSchemaDataObject>
 ";
             File.WriteAllText(generationSchemasPath, xmlContent);
         }
