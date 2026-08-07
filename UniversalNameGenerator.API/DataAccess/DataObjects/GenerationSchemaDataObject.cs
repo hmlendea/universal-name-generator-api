@@ -1,10 +1,13 @@
 using System;
+using System.Xml.Serialization;
 
 using NuciDAL.DataObjects;
 using NuciExtensions;
 
 namespace UniversalNameGenerator.API.DataAccess.DataObjects
 {
+    [XmlRoot("GenerationSchemaEntity")]
+    [XmlType(TypeName = "GenerationSchemaEntity")]
     public sealed class GenerationSchemaDataObject : EntityBase, IEquatable<GenerationSchemaDataObject>
     {
         public string Name { get; set; } = string.Empty;
