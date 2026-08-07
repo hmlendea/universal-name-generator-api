@@ -1,133 +1,95 @@
-[![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/fund.html)
-[![Latest Release](https://img.shields.io/github/v/release/hmlendea/universal-name-generator)](https://github.com/hmlendea/universal-name-generator-api/releases/latest)
+[![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/funding)
+[![Latest Release](https://img.shields.io/github/v/release/hmlendea/universal-name-generator-api)](https://github.com/hmlendea/universal-name-generator-api/releases/latest)
 [![Build Status](https://github.com/hmlendea/universal-name-generator-api/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/universal-name-generator-api/actions/workflows/dotnet.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://gnu.org/licenses/gpl-3.0)
 
 # Universal Name Generator API
 
-Universal Name Generator API is an ASP.NET Core REST API for generating random names based on configurable generation schemas backed by wordlists.
+Universal Name Generator API provides an ASP.NET Core REST API for generating random names from configurable generation schemas and reusable word lists.
 
-The API supports:
+## 📑 Table of Contents
 
-- generating names by schema ID
-- Markov chain and randomiser generation strategies
+- [Capabilities](#-capabilities)
+- [Usage](#-usage)
+- [System Requirements](#-system-requirements)
+- [Installation](#-installation)
+- [Configuration](#-configuration)
+- [Development](#-development)
+  - [Requirements](#requirements)
+  - [Setup](#setup)
+  - [Build](#build)
+  - [Run](#run)
+  - [Test](#test)
+  - [Release](#release)
+  - [Dependencies](#dependencies)
+- [Project Structure](#-project-structure)
+- [Contributing](#-contributing)
+- [Related Projects](#-related-projects)
+- [Supporting the Project](#-supporting-the-project)
+- [License](#-license)
 
-## Table of Contents
+## ✨ Capabilities
 
-- [Overview](#overview)
-- [Requirements](#requirements)
-- [Configuration](#configuration)
-- [Run the API](#run-the-api)
-- [API Reference](#api-reference)
-- [Development](#development)
-- [Release](#release)
-- [Contributing](#contributing)
-- [Related Projects](#related-projects)
-- [License](#license)
+- Generate names by generation schema identifier
+- Use random selector and Markov chain generation strategies
 
-## Overview
-
-Base route:
-
-- `/Names`
-
-Controller actions:
-
-- `GET /Names` — generate names for a given schema
-
-## Requirements
-
-- .NET SDK/runtime with support for `net10.0`
-
-## Configuration
-
-Default configuration is defined in `appsettings.json`:
-
-```json
-{
-  "dataStoreSettings": {
-    "wordListsRootDirectory": "Data/Wordlists",
-    "generationSchemasPath": "Data/GenerationSchemas.xml"
-  },
-  "securitySettings": {
-    "apiKey": "[[UNIVERSAL_NAME_GENERATOR_API_KEY]]"
-  },
-  "nuciLoggerSettings": {
-    "logFilePath": "logfile.log",
-    "isFileOutputEnabled": true
-  }
-}
-```
-
-Important settings:
-
-- `dataStoreSettings.wordListsRootDirectory`: path to the directory containing wordlist `.lst` files.
-- `dataStoreSettings.generationSchemasPath`: path to the `GenerationSchemas.xml` file.
-- `securitySettings.apiKey`: API key required for authorization.
-
-## Run the API
+## 🚀 Usage
 
 ```bash
-dotnet restore
-dotnet run
+curl -G "http://localhost:5000/Names" \
+  --data-urlencode "schema=arabic-toponyms" \
+  --data-urlencode "count=5" \
+  --data-urlencode "apiKey=YOUR_API_KEY"
 ```
 
-By default, ASP.NET Core prints the listening URLs in the console.
+## 🖥️ System Requirements
 
-## API Reference
+- **OS:** Linux, macOS, Windows
+- **RAM:** 256 MB minimum
+- .NET 10.0 runtime
 
-### Authentication
+## 📦 Installation
 
-All requests require an API key passed as a query parameter or via the `Authorization` header.
+[![Obtain it from GitHub](https://raw.githubusercontent.com/hmlendea/readme-assets/master/badges/stores/github.png)](https://github.com/hmlendea/universal-name-generator-api/releases)
 
-### Get Names
+## ⚙️ Configuration
 
-`GET /Names`
+All settings are loaded from the configuration file. The subsequent keys are recognised:
 
-Query parameters:
+| Section | Key | Description |
+|---------|-----|-------------|
+| `dataStoreSettings` | `wordListsRootDirectory` | Path to the directory containing word list `.lst` files. |
+| `dataStoreSettings` | `generationSchemasPath` | Path to the `GenerationSchemas.xml` file. |
+| `securitySettings` | `apiKey` | API key required for authorisation. |
+| `nuciLoggerSettings` | `logFilePath` | File path for persisted log output. |
+| `nuciLoggerSettings` | `isFileOutputEnabled` | Enables or disables file log output. |
 
-| Parameter | Type   | Required | Default | Description                                |
-|-----------|--------|----------|---------|--------------------------------------------|
-| `apiKey`  | string | yes      |         | API key for authorization                  |
-| `schema`  | string | yes      |         | Schema ID from `GenerationSchemas.xml`     |
-| `count`   | int    | no       | `1`     | Number of names to generate (1–100000)     |
+## 🛠️ Development
 
-Example request:
+### Requirements
 
-```text
-GET /Names?apiKey=YOUR_API_KEY&schema=arabic-toponyms&count=5
-```
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 
-Success response shape:
+### Setup
 
-```json
-{
-  "names": [
-    "Bashanar",
-    "Quwarith",
-    "Ummaraq",
-    "Habalis",
-    "Sharzeen"
-  ],
-  "success": true,
-  "message": "Operation completed successfully.",
-  "code": "SUCCESS",
-  "hmac": null
-}
-```
-
-## Development
+All NuGet dependencies are restored automatically by `dotnet restore`.
 
 ### Build
 
 ```bash
-dotnet build
+dotnet build UniversalNameGenerator.API/UniversalNameGenerator.API.csproj
 ```
 
 ### Run
 
 ```bash
-dotnet run
+dotnet run --project UniversalNameGenerator.API/UniversalNameGenerator.API.csproj
+```
+
+### Test
+
+```bash
+dotnet test UniversalNameGenerator.API.slnx
 ```
 
 ### Release
@@ -138,27 +100,73 @@ The repository includes `release.sh`, which delegates to the upstream deployment
 bash ./release.sh 1.0.0
 ```
 
-This script downloads and executes an external release helper from: `https://raw.githubusercontent.com/hmlendea/deployment-scripts/master/release/dotnet/10.0.sh`
+This script downloads and executes an external release helper from `https://raw.githubusercontent.com/hmlendea/deployment-scripts/master/release/dotnet/10.0.sh`.
 
 **Note:** Piping into `bash` is an intensely controversial topic. Please review any external scripts before running them in your environment!
 
-## Contributing
+### Dependencies
 
-Contributions are welcome.
+| Package | Purpose |
+|---------|---------|
+| `NuciAPI` | Core API abstractions and response models. |
+| `NuciAPI.Controllers` | Controller utilities for request handling. |
+| `NuciAPI.Middleware` | Base middleware infrastructure. |
+| `NuciAPI.Middleware.ExceptionHandling` | Structured exception handling middleware. |
+| `NuciAPI.Middleware.Logging` | Request and operation logging middleware. |
+| `NuciAPI.Middleware.Security` | API security middleware integration. |
+| `NuciDAL` | Data access abstractions for repository patterns. |
+| `NuciExtensions` | Shared helper extensions used across the service. |
+| `NuciGenerators.Text` | Text generation primitives. |
+| `NuciGenerators.Text.MarkovChain` | Markov chain generator implementation. |
+| `NuciLog` | Logging providers. |
+| `NuciLog.Core` | Logging core contracts. |
+| `NuciSecurity.HMAC` | HMAC generation and verification support. |
 
-Please:
+## 🗂️ Project Structure
 
-- keep the changes cross-platform
-- keep the pull requests focused and consistent with the existing style
-- update the documentation when the behaviour changes
-- add or update the tests for any new behaviour
+The solution contains the subsequent projects:
 
-## Related Projects
+- `UniversalNameGenerator.API`: ASP.NET Core Web API application.
+- `UniversalNameGenerator.API.UnitTests`: Unit test project for API and service components.
 
-- [Universal Name Generator](https://github.com/hmlendea/universal-name-generator)
-- [Universal Name Generator API](https://github.com/hmlendea/universal-name-generator-api)
+The key directories inside `UniversalNameGenerator.API/` are:
 
-## License
+| Directory | Purpose |
+|-----------|---------|
+| `Configuration/` | Application configuration models and settings contracts. |
+| `Controllers/` | HTTP endpoints for name generation requests. |
+| `DataAccess/` | Data objects and repository implementations for word sources and schemas. |
+| `Logging/` | Logging operation and key definitions. |
+| `Models/` | Request and response API models. |
+| `Service/` | Name generation service logic, models, and strategy implementations. |
 
-Licensed under the GNU General Public License v3.0 or later.
-See [LICENSE](./LICENSE) for details.
+## 🤝 Contributing
+
+You are welcome to submit any suggestion, feedback, or modification to this project.
+
+When doing so, please:
+- Maintain cross-platform compatibility
+- Maintain the existing public contract intact unless a breaking change is intentional
+- Maintain the pull requests as focused and consistent with the existing code style
+- Maintain your branch up-to-date with `master`
+- Revise the documentation when behaviour changes
+- Properly test all changes, including edge cases and error conditions
+- Add unit tests for any new or changed functionality
+
+## 🔗 Related Projects
+
+- [Universal Name Generator](https://github.com/hmlendea/universal-name-generator): Desktop application for local name generation workflows.
+- [Universal Name Generator API](https://github.com/hmlendea/universal-name-generator-api): REST API service for remote and integrated name generation.
+
+## 💝 Supporting the Project
+
+Discovered a problem or have a suggestion? [Open an issue](https://github.com/hmlendea/universal-name-generator-api/issues)!
+
+If you find this project useful, consider [funding it](https://hmlendea.go.ro/funding) or starring ⭐️ it on GitHub!
+
+[![Donate](https://raw.githubusercontent.com/hmlendea/readme-assets/master/donate_generic.png)](https://hmlendea.go.ro/funding)
+
+## 📄 License
+
+This project is being distributed under the `GNU General Public License v3.0` or later.
+See [LICENSE](./LICENSE) for further information.
