@@ -37,9 +37,9 @@ Universal Name Generator API provides an ASP.NET Core REST API for generating ra
 
 ```bash
 curl -G "http://localhost:5000/Names" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   --data-urlencode "schema=arabic-toponyms" \
-  --data-urlencode "count=5" \
-  --data-urlencode "apiKey=YOUR_API_KEY"
+  --data-urlencode "count=5"
 ```
 
 ## 🖥️ System Requirements
@@ -88,6 +88,8 @@ dotnet run --project UniversalNameGenerator.API/UniversalNameGenerator.API.cspro
 
 ### Test
 
+The solution test command executes both the unit and integration test projects. The integration suite hosts the complete production HTTP pipeline and uses isolated temporary generation data.
+
 ```bash
 dotnet test UniversalNameGenerator.API.slnx
 ```
@@ -126,8 +128,9 @@ This script downloads and executes an external release helper from `https://raw.
 
 The solution contains the subsequent projects:
 
-- `UniversalNameGenerator.API`: ASP.NET Core Web API application.
-- `UniversalNameGenerator.API.UnitTests`: Unit test project for API and service components.
+- [`UniversalNameGenerator.API`](./UniversalNameGenerator.API/): ASP.NET Core Web API application.
+- [`UniversalNameGenerator.API.IntegrationTests`](./UniversalNameGenerator.API.IntegrationTests/): Integration tests for HTTP contracts, middleware, and production name generation.
+- [`UniversalNameGenerator.API.UnitTests`](./UniversalNameGenerator.API.UnitTests/): Unit tests for API and service components.
 
 The key directories inside `UniversalNameGenerator.API/` are:
 
