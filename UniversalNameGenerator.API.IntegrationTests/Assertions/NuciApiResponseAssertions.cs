@@ -21,6 +21,7 @@ namespace UniversalNameGenerator.API.IntegrationTests.Assertions
         [
             "names",
             "success",
+            "content",
             "message",
             "code",
             "hmac"
@@ -51,6 +52,7 @@ namespace UniversalNameGenerator.API.IntegrationTests.Assertions
                     responseRoot.EnumerateObject().Select(property => property.Name),
                     Is.EquivalentTo(SuccessPropertyNames));
                 Assert.That(responseRoot.GetProperty("success").GetBoolean());
+                Assert.That(responseRoot.GetProperty("content").ValueKind, Is.EqualTo(JsonValueKind.Null));
                 Assert.That(
                     responseRoot.GetProperty("message").GetString(),
                     Is.EqualTo(NuciApiResponseMessages.SuccessMessages.Default));
