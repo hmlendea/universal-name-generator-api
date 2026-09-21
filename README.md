@@ -26,6 +26,7 @@ Universal Name Generator API provides an ASP.NET Core REST API for generating ra
 - [Contributing](#-contributing)
 - [Related Projects](#-related-projects)
 - [Supporting the Project](#-supporting-the-project)
+- [Security](#-security)
 - [License](#-license)
 
 ## ✨ Capabilities
@@ -168,6 +169,10 @@ Discovered a problem or have a suggestion? [Open an issue](https://github.com/hm
 If you find this project useful, consider [funding it](https://hmlendea.go.ro/funding) or starring ⭐️ it on GitHub!
 
 [![Donate](https://raw.githubusercontent.com/hmlendea/readme-assets/master/donate_generic.png)](https://hmlendea.go.ro/funding)
+
+## 🛡️ Security
+
+Please review the [security policy](./SECURITY.md) before reporting a vulnerability.
 
 ## 📄 License
 
