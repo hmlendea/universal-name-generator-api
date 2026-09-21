@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Solution>
     <Project Path="UniversalNameGenerator.API/UniversalNameGenerator.API.csproj" />
+    <Project Path="UniversalNameGenerator.API.IntegrationTests/UniversalNameGenerator.API.IntegrationTests.csproj" />
     <Project Path="UniversalNameGenerator.API.UnitTests/UniversalNameGenerator.API.UnitTests.csproj" />
 </Solution>
