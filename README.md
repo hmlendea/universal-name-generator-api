@@ -23,6 +23,7 @@ Universal Name Generator API provides an ASP.NET Core REST API for generating ra
   - [Release](#release)
   - [Dependencies](#dependencies)
 - [Project Structure](#-project-structure)
+  - [Architecture](#-architecture)
 - [Contributing](#-contributing)
 - [Related Projects](#-related-projects)
 - [Supporting the Project](#-supporting-the-project)
@@ -142,6 +143,10 @@ The key directories inside `UniversalNameGenerator.API/` are:
 | `Logging/` | Logging operation and key definitions. |
 | `Models/` | Request and response API models. |
 | `Service/` | Name generation service logic, models, and strategy implementations. |
+
+## 🏛️ Architecture
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the current system context, runtime flow, component ownership, data contracts, deployment constraints, and extension points.
 
 ## 🤝 Contributing
 
