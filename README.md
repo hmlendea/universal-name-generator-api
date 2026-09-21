@@ -14,6 +14,7 @@ Universal Name Generator API provides an ASP.NET Core REST API for generating ra
 - [System Requirements](#-system-requirements)
 - [Installation](#-installation)
 - [Configuration](#-configuration)
+- [Authentication and Authorisation](#-authentication-and-authorisation)
 - [Development](#-development)
   - [Requirements](#requirements)
   - [Setup](#setup)
@@ -22,8 +23,9 @@ Universal Name Generator API provides an ASP.NET Core REST API for generating ra
   - [Test](#test)
   - [Release](#release)
   - [Dependencies](#dependencies)
+- [GitHub Actions](#-github-actions)
 - [Project Structure](#-project-structure)
-  - [Architecture](#-architecture)
+- [Architecture](#-architecture)
 - [Contributing](#-contributing)
 - [Related Projects](#-related-projects)
 - [Supporting the Project](#-supporting-the-project)
@@ -33,7 +35,18 @@ Universal Name Generator API provides an ASP.NET Core REST API for generating ra
 ## ✨ Capabilities
 
 - Generate names by generation schema identifier
-- Use random selector and Markov chain generation strategies
+- Generate values with random, randomiser, random-selector, and Markov chain strategies
+- Apply configured word casing and filter lists
+
+## 🔐 Authentication and Authorisation
+
+Requests to `GET /Names` require an API key in the `Authorization` header. The key may be sent directly or with the `Bearer` prefix:
+
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+The API key is configured through the `securitySettings:apiKey` setting. Do not commit the configured secret to source control.
 
 ## 🚀 Usage
 
@@ -112,19 +125,25 @@ This script downloads and executes an external release helper from `https://raw.
 
 | Package | Purpose |
 |---------|---------|
-| `NuciAPI` | Core API abstractions and response models. |
-| `NuciAPI.Controllers` | Controller utilities for request handling. |
-| `NuciAPI.Middleware` | Base middleware infrastructure. |
-| `NuciAPI.Middleware.ExceptionHandling` | Structured exception handling middleware. |
-| `NuciAPI.Middleware.Logging` | Request and operation logging middleware. |
-| `NuciAPI.Middleware.Security` | API security middleware integration. |
-| `NuciDAL` | Data access abstractions for repository patterns. |
-| `NuciExtensions` | Shared helper extensions used across the service. |
-| `NuciGenerators.Text` | Text generation primitives. |
-| `NuciGenerators.Text.MarkovChain` | Markov chain generator implementation. |
-| `NuciLog` | Logging providers. |
-| `NuciLog.Core` | Logging core contracts. |
-| `NuciSecurity.HMAC` | HMAC generation and verification support. |
+| `NuciAPI` 3.6.1 | Core API abstractions and response models. |
+| `NuciAPI.Controllers` 2.3.1 | Controller utilities and API-key authorisation. |
+| `NuciAPI.Middleware` 2.0.3 | Base middleware infrastructure. |
+| `NuciAPI.Middleware.ExceptionHandling` 1.0.2 | Structured exception handling middleware. |
+| `NuciAPI.Middleware.Logging` 1.0.1 | Request and operation logging middleware. |
+| `NuciAPI.Middleware.Security` 1.0.6 | API scanner and security middleware integration. |
+| `NuciDAL` 3.2.1 | Data access abstractions for repository patterns. |
+| `NuciExtensions` 5.3.2 | Shared extension methods used across the service. |
+| `NuciGenerators.Text` 1.0.1 | Text generation primitives. |
+| `NuciGenerators.Text.MarkovChain` 1.0.1 | Markov chain generator implementation. |
+| `NuciLog` 1.2.1 | Logging provider implementation. |
+| `NuciLog.Core` 3.1.0 | Logging contracts. |
+| `NuciSecurity.HMAC` 4.1.3 | HMAC metadata and validation support. |
+
+## ⚙️ GitHub Actions
+
+| Workflow | Purpose | What it does |
+|----------|---------|--------------|
+| [.NET](.github/workflows/dotnet.yml) | Continuous validation | Restores dependencies, builds the solution, and runs the unit and integration tests on Ubuntu with .NET 10.0. |
 
 ## 🗂️ Project Structure
 
@@ -147,7 +166,7 @@ The key directories inside `UniversalNameGenerator.API/` are:
 
 ## 🏛️ Architecture
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for the current system context, runtime flow, component ownership, data contracts, deployment constraints, and extension points.
+See the [architecture documentation](./ARCHITECTURE.md) for the system context, principal components, runtime flows, ownership boundaries, dependencies, constraints, and extension points.
 
 ## 🤝 Contributing
 
