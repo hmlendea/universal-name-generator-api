@@ -181,6 +181,8 @@ When doing so, please:
 - Properly test all changes, including edge cases and error conditions
 - Add unit tests for any new or changed functionality
 
+See the [contributing guidelines](./CONTRIBUTING.md) for details on how to report issues, suggest enhancements, and submit changes.
+
 ## 🔗 Related Projects
 
 - [Universal Name Generator](https://github.com/hmlendea/universal-name-generator): Desktop application for local name generation workflows.
