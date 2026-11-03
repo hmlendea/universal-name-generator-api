@@ -183,6 +183,10 @@ When doing so, please:
 
 See the [contributing guidelines](./CONTRIBUTING.md) for details on how to report issues, suggest enhancements, and submit changes.
 
+## 📜 Code of Conduct
+
+This project follows the [Code of Conduct](./CODE_OF_CONDUCT.md).
+
 ## 🔗 Related Projects
 
 - [Universal Name Generator](https://github.com/hmlendea/universal-name-generator): Desktop application for local name generation workflows.
