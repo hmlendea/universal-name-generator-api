@@ -88,4 +88,4 @@ dotnet test UniversalNameGenerator.API.IntegrationTests/UniversalNameGenerator.A
 
 ## 📋 Code of Conduct
 
-This project follows the [Security Policy](./SECURITY.md).
+This project follows the [Code of Conduct](./CODE_OF_CONDUCT.md).
