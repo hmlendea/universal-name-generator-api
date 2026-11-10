@@ -166,9 +166,27 @@ The key directories inside `UniversalNameGenerator.API/` are:
 | `Models/` | Request and response API models. |
 | `Service/` | Name generation service logic, models, and strategy implementations. |
 
+## 📚 Documentation
+
+Comprehensive documentation is available in the [`docs/`](./docs/) directory:
+
+| Document | Description |
+|----------|-------------|
+| [Documentation index](./docs/INDEX.md) | Master index with navigation aids for all documentation. |
+| [Quick start](./docs/quick-start.md) | Getting started guide: clone, build, run, and test. |
+| [Repository overview](./docs/repository-overview.md) | Repository purpose, scope, principal capabilities, and entry points. |
+| [Repository structure](./docs/repository-structure.md) | Source tree layout, project organisation, and module boundaries. |
+| [Architecture](./docs/architecture.md) | High-level architecture complementing the root `ARCHITECTURE.md`. |
+| [API reference](./docs/api-reference/INDEX.md) | Endpoint summary, authentication, versioning, and rate limiting. |
+| [Configuration](./docs/configuration.md) | Configuration schema, sources, precedence, and settings reference. |
+| [Security](./docs/security.md) | Security model, API key authorisation, and threat mitigations. |
+| [Testing](./docs/testing.md) | Test strategy, project organisation, and coverage. |
+| [Build and deployment](./docs/build-and-deployment.md) | Build pipeline, GitHub Actions workflows, and deployment. |
+| [Dependencies](./docs/dependencies.md) | External and internal dependencies, NuGet packages, and generator libraries. |
+
 ## 🏛️ Architecture
 
-See the [architecture documentation](./ARCHITECTURE.md) for the system context, principal components, runtime flows, ownership boundaries, dependencies, constraints, and extension points.
+See the [architecture documentation](./ARCHITECTURE.md) for the system context, principal components, runtime flows, ownership boundaries, dependencies, constraints, and extension points. A complementary high-level architecture guide is available in [`docs/architecture.md`](./docs/architecture.md).
 
 ## 🤝 Contributing
 
