@@ -319,6 +319,42 @@ applicationBuilder.UseNuciApiScannerProtection();
 
 ---
 
+## Automated Security Scanning
+
+### GitHub Actions Security Workflow
+
+The repository includes a dedicated security scanning workflow (`.github/workflows/security.yml`) that runs automatically:
+
+**Triggers**:
+- Push to `master` branch
+- Pull requests targeting `master`
+- Weekly schedule (Sunday 00:00 UTC)
+
+**Checks Performed**:
+1. **NuGet Vulnerability Scan**: `dotnet list package --vulnerable --include-transitive` identifies known vulnerable packages in the dependency graph
+2. **CodeQL Static Analysis**: GitHub's CodeQL engine performs semantic analysis of C# code to detect security vulnerabilities, including:
+   - Injection vulnerabilities
+   - Authentication/authorization flaws
+   - Information exposure
+   - Insecure configurations
+   - Cryptographic issues
+
+**Permissions**:
+- `security-events: write` — Required to upload SARIF results to GitHub Code Scanning
+- `contents: read` — Required to checkout repository code
+
+**Results**:
+- Vulnerable packages reported in workflow logs
+- CodeQL findings appear in the **Security** tab under **Code scanning alerts**
+- Failed checks block PR merges when configured
+
+**Configuration**:
+- .NET version: 10.0 (matches project target framework)
+- CodeQL languages: `csharp`
+- No additional configuration required
+
+---
+
 ## Security Best Practices
 
 ### API Key Management
