@@ -1,6 +1,7 @@
 [![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/funding)
 [![Latest Release](https://img.shields.io/github/v/release/hmlendea/universal-name-generator-api)](https://github.com/hmlendea/universal-name-generator-api/releases/latest)
 [![Build Status](https://github.com/hmlendea/universal-name-generator-api/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/universal-name-generator-api/actions/workflows/dotnet.yml)
+[![Security Scan](https://github.com/hmlendea/universal-name-generator-api/actions/workflows/security.yml/badge.svg)](https://github.com/hmlendea/universal-name-generator-api/actions/workflows/security.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://gnu.org/licenses/gpl-3.0)
 
 # Universal Name Generator API
@@ -144,6 +145,7 @@ This script downloads and executes an external release helper from `https://raw.
 | Workflow | Purpose | What it does |
 |----------|---------|--------------|
 | [.NET](.github/workflows/dotnet.yml) | Continuous validation | Restores dependencies, builds the solution, and runs the unit and integration tests on Ubuntu with .NET 10.0. |
+| [Security](.github/workflows/security.yml) | Security scanning | Checks for vulnerable NuGet packages and runs CodeQL static analysis on C# code. Runs on push, PR, and weekly schedule. |
 
 ## 🗂️ Project Structure
 
